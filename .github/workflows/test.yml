@@ -140,11 +140,9 @@ jobs:
       - name: Run all workflow test cases
         shell: bash
         env:
-          # Add your GitHub secrets here
-          # They will be available to the workflow
-          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MEP_DEV__SERVER: ${{ secrets.ER_SERVER }}
-          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MEP_DEV__PASSWORD: ${{ secrets.ER_PASSWORD }}
-          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MEP_DEV__USERNAME: ${{ secrets.ER_USERNAME }}
+          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MMNR__SERVER: ${{ secrets.ER_SERVER }}
+          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MMNR__USERNAME: ${{ secrets.ER_USERNAME }}
+          ECOSCOPE_WORKFLOWS__CONNECTIONS__EARTHRANGER__MMNR__PASSWORD: ${{ secrets.ER_PASSWORD }}
         run: |
           chmod +x dev/pytest-cli.sh || true
           pixi run --manifest-path pixi.toml -e default bash dev/pytest-cli.sh ${{ needs.discover.outputs.workflow_id }} --all

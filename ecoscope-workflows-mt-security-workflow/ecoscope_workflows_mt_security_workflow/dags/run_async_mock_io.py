@@ -200,7 +200,7 @@ def main(params: Params):
                 "include_updates": False,
                 "include_related_events": False,
                 "include_display_values": True,
-                "include_null_geometry": True,
+                "include_null_geometry": False,
             }
             | (params_dict.get("get_event_data") or {}),
             method="call",
@@ -488,7 +488,7 @@ def main(params: Params):
             partial={
                 "text": DependsOn("event_ecomap"),
                 "root_path": os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
-                "filename_suffix": "illegal_events_map",
+                "filename_suffix": "security_report_map",
             }
             | (params_dict.get("ecomap_html_url") or {}),
             method="call",

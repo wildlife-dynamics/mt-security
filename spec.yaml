@@ -16,9 +16,7 @@ requirements:
 
 rjsf-overrides:
   properties:
-    get_event_data.properties.event_types.default: ["arrest_rep", "snare_rep", "poacher_camp_rep"]
-    get_event_data.properties.event_types.description: >-
-      Illegal event types to include in the SITREP report.
+    # Note: event_types override applies in Phase 3 when get_events replaces load_df
     Process Events.properties.filter_events.properties.bounding_box.default:
       min_x: 33.0
       min_y: -3.0
@@ -28,7 +26,7 @@ rjsf-overrides:
       - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
         opacity: 1
     persist_sitrep_csv.properties.filetypes.default: ["csv"]
-    persist_sitrep_csv.properties.filetypes.items.enum: ["csv"]
+    persist_sitrep_csv.properties.filetypes.items.enum: ["csv", "parquet"]
     sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
 
   uiSchema:

@@ -67,14 +67,6 @@
           "type": "string",
           "description": "Layer name for GeoPackage files (optional, only used for .gpkg files)",
           "ecoscope:advanced": true
-        },
-        "event_types": {
-          "default": [
-            "arrest_rep",
-            "snare_rep",
-            "poacher_camp_rep"
-          ],
-          "description": "Illegal event types to include in the SITREP report."
         }
       },
       "required": [
@@ -411,7 +403,8 @@
           ],
           "items": {
             "enum": [
-              "csv"
+              "csv",
+              "parquet"
             ]
           }
         }

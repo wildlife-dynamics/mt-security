@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Literal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, confloat, constr
 
@@ -30,10 +30,6 @@ class GetEventData(BaseModel):
         None,
         description="Layer name for GeoPackage files (optional, only used for .gpkg files)",
         title="Layer",
-    )
-    event_types: Any | None = Field(
-        ["arrest_rep", "snare_rep", "poacher_camp_rep"],
-        description="Illegal event types to include in the SITREP report.",
     )
 
 
@@ -205,6 +201,7 @@ class GenerateMap(BaseModel):
 
 class Filetype(Enum):
     csv = "csv"
+    parquet = "parquet"
 
 
 class PersistSitrepCsv(BaseModel):

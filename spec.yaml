@@ -13,6 +13,9 @@ requirements:
   - name: ecoscope-workflows-ext-mt
     version: ">=0.0.2"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+  - name: pydeck
+    version: "0.0.2"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
   properties:

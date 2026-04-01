@@ -1,7 +1,7 @@
 phase: new
-status: in-progress
+status: completed
 lastUpdated: '2026-04-01'
-notes: ''
+notes: 'Phase 2 complete. Phase 3: reconnect EarthRanger API.'
 
 setup:
   - name: Scaffold repo
@@ -29,14 +29,14 @@ tasks:
     status: completed
     type: implement
   - name: Configure rjsf
-    status: pending
+    status: completed
     type: configure
   - name: Configure layout
-    status: pending
+    status: completed
     type: configure
 
 wrapup:
   - name: Self-check against acceptance criteria
-    status: pending
+    status: completed
   - name: Phase transition / summary
-    status: pending
+    status: completed

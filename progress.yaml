@@ -1,0 +1,42 @@
+phase: new
+status: pending
+lastUpdated: '2026-04-01'
+notes: ''
+
+setup:
+  - name: Scaffold repo
+    status: pending
+  - name: Populate files from PRD
+    status: pending
+
+tasks:
+  - name: Event fetching and processing pipeline
+    status: pending
+    type: implement
+  - name: SITREP table generation
+    status: pending
+    type: implement
+  - name: Point map output
+    status: pending
+    type: implement
+  - name: Table widget output
+    status: pending
+    type: implement
+  - name: CSV data export
+    status: pending
+    type: implement
+  - name: DOCX report generation
+    status: pending
+    type: implement
+  - name: Configure rjsf
+    status: pending
+    type: configure
+  - name: Configure layout
+    status: pending
+    type: configure
+
+wrapup:
+  - name: Self-check against acceptance criteria
+    status: pending
+  - name: Phase transition / summary
+    status: pending

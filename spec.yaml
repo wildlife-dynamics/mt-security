@@ -1,0 +1,313 @@
+id: mt_sitrep
+
+requirements:
+  - name: ecoscope-workflows-core
+    version: ">=0.22.18, <0.23.0"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+  - name: ecoscope-workflows-ext-ecoscope
+    version: ">=0.22.18, <0.23.0"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+  - name: ecoscope-workflows-ext-custom
+    version: ">=0.0.41, <0.1.0"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+  - name: ecoscope-workflows-ext-mt
+    version: ">=0.0.1"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+rjsf-overrides:
+  properties:
+    get_event_data.properties.event_types.default: ["arrest_rep", "snare_rep", "poacher_camp_rep"]
+    get_event_data.properties.event_types.description: >-
+      Illegal event types to include in the SITREP report.
+    Process Events.properties.filter_events.properties.bounding_box.default:
+      min_x: 33.0
+      min_y: -3.0
+      max_x: 36.0
+      max_y: 0.0
+    base_map_defs.properties.base_maps.default:
+      - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+        opacity: 1
+    persist_sitrep_csv.properties.filetypes.default: ["csv"]
+    persist_sitrep_csv.properties.filetypes.items.enum: ["csv"]
+    sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-sitrep/main/resources/templates/mt_sitrep_report_template.docx"
+
+  uiSchema:
+    Process Events.filter_events.filter_point_coords.items.ui:options.label: false
+
+task-instance-defaults:
+  skipif:
+    conditions:
+      - any_is_empty_df
+      - any_dependency_skipped
+
+workflow:
+  # Setup
+  - name: Workflow Details
+    id: workflow_details
+    task: set_workflow_details
+
+  - name: Time Range
+    id: time_range
+    task: set_time_range
+    partial:
+      time_format: '%d %b %Y %H:%M:%S %Z'
+
+  - name: Extract Timezone
+    id: get_timezone
+    task: get_timezone_from_time_range
+    partial:
+      time_range: ${{ workflow.time_range.return }}
+
+  - name: Data Source
+    id: er_client_name
+    task: set_er_connection
+
+  # Data Fetching
+  - name: Get Illegal Events
+    id: get_event_data
+    task: get_events
+    partial:
+      client: ${{ workflow.er_client_name.return }}
+      time_range: ${{ workflow.time_range.return }}
+      event_columns: null
+      raise_on_empty: false
+      include_details: true
+      include_updates: false
+      include_related_events: false
+      include_display_values: true
+      include_null_geometry: true
+
+  # Processing
+  - title: Process Events
+    type: task-group
+    description: "Process illegal events: filter, normalize details, generate SITREP table."
+    tasks:
+      - name: Convert to Timezone
+        id: convert_tz
+        task: convert_values_to_timezone
+        partial:
+          df: ${{ workflow.get_event_data.return }}
+          timezone: ${{ workflow.get_timezone.return }}
+          columns: ["time"]
+
+      - name: Filter Event Coordinates
+        id: filter_events
+        task: apply_reloc_coord_filter
+        partial:
+          df: ${{ workflow.convert_tz.return }}
+          roi_gdf: null
+          roi_name: null
+          reset_index: false
+          filter_point_coords:
+            - {x: 180.0, y: 90.0}
+            - {x: 0.0, y: 0.0}
+            - {x: 1.0, y: 1.0}
+
+      - name: Process Event Details
+        id: process_details
+        task: process_events_details
+        partial:
+          df: ${{ workflow.filter_events.return }}
+          client: ${{ workflow.er_client_name.return }}
+          map_to_titles: true
+          ordered: true
+
+      - name: Normalize Event Details
+        id: normalize_event_details
+        task: normalize_json_column
+        partial:
+          df: ${{ workflow.process_details.return }}
+          column: "event_details"
+          skip_if_not_exists: true
+          sort_columns: false
+
+      - name: Remove Event Details Prefix
+        id: drop_details_prefix
+        task: drop_column_prefix
+        partial:
+          df: ${{ workflow.normalize_event_details.return }}
+          prefix: "event_details__"
+          duplicate_strategy: "suffix"
+
+      - name: Generate SITREP Table
+        id: sitrep_data
+        task: ecoscope_workflows_ext_mt.tasks.sitrep_table
+        partial:
+          df: ${{ workflow.drop_details_prefix.return }}
+
+      - name: Events Colormap
+        id: events_colormap
+        task: apply_color_map
+        partial:
+          df: ${{ workflow.drop_details_prefix.return }}
+          input_column_name: "event_type"
+          colormap: "Dark2"
+          output_column_name: "event_type_colormap"
+
+  # Map
+  - title: Generate Map
+    type: task-group
+    description: "Generate point map of illegal events colored by event type."
+    tasks:
+      - name: Set Map Title
+        id: set_map_title
+        task: set_string_var
+        partial:
+          var: "Illegal Events Map"
+
+      - name: Base Maps
+        id: base_map_defs
+        task: set_base_maps
+
+      - name: Rename Columns for Display
+        id: rename_display_cols
+        task: map_columns
+        partial:
+          df: ${{ workflow.events_colormap.return }}
+          drop_columns: []
+          retain_columns: []
+          raise_if_not_found: false
+          rename_columns:
+            time: "Event Time"
+            event_type: "Event Type"
+            serial_number: "Serial Number"
+
+      - name: Create Point Layer
+        id: event_point_layer
+        task: create_point_layer
+        skipif:
+          conditions:
+            - any_is_empty_df
+            - any_dependency_skipped
+            - all_geometry_are_none
+        partial:
+          geodataframe: ${{ workflow.rename_display_cols.return }}
+          layer_style:
+            fill_color_column: "event_type_colormap"
+            get_radius: 5
+          legend:
+            label_column: "Event Type"
+            color_column: "event_type_colormap"
+          tooltip_columns: ["Serial Number", "Event Time", "Event Type"]
+
+      - name: Draw Ecomap
+        id: event_ecomap
+        task: draw_ecomap
+        partial:
+          geo_layers: ${{ workflow.event_point_layer.return }}
+          title: null
+          tile_layers: ${{ workflow.base_map_defs.return }}
+          north_arrow_style:
+            placement: "top-left"
+          legend_style:
+            title: "Event Type"
+            format_title: false
+            placement: "bottom-right"
+          static: false
+          max_zoom: 20
+
+      - name: Persist Ecomap
+        id: ecomap_html_url
+        task: persist_text
+        partial:
+          text: ${{ workflow.event_ecomap.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: "illegal_events_map"
+
+      - name: Create Map Widget
+        id: map_widget
+        task: create_map_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: ${{ workflow.set_map_title.return }}
+          data: ${{ workflow.ecomap_html_url.return }}
+
+  # Table Widget
+  - title: SITREP Table Display
+    type: task-group
+    description: "Render SITREP table as dashboard widget."
+    tasks:
+      - name: Set Table Title
+        id: set_table_title
+        task: set_string_var
+        partial:
+          var: "SITREP Summary"
+
+      - name: Draw SITREP Table
+        id: sitrep_html_table
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.sitrep_data.return }}
+          widget_id: ${{ workflow.set_table_title.return }}
+
+      - name: Persist Table HTML
+        id: persist_table_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.sitrep_html_table.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: "sitrep_table"
+
+      - name: Create Table Widget
+        id: table_widget
+        task: create_table_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: ${{ workflow.set_table_title.return }}
+          data: ${{ workflow.persist_table_html.return }}
+
+  # Data Export
+  - name: Persist SITREP CSV
+    id: persist_sitrep_csv
+    task: persist_df_wrapper
+    partial:
+      df: ${{ workflow.sitrep_data.return }}
+      root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+      filename_prefix: "sitrep"
+      filetypes: ["csv"]
+      sanitize: false
+    skipif:
+      conditions:
+        - never
+
+  # Report
+  - name: Create SITREP Report
+    id: sitrep_report
+    task: ecoscope_workflows_ext_custom.tasks.results.create_docx
+    partial:
+      context:
+        items:
+          - item_type: timerange
+            key: report_date
+            value: ${{ workflow.time_range.return }}
+            format: "%b %Y"
+          - item_type: image
+            key: event_map
+            value: ${{ workflow.ecomap_html_url.return }}
+            screenshot_config:
+              wait_for_timeout: 1000
+              max_concurrent_pages: 2
+              device_scale_factor: 1.0
+          - item_type: table
+            key: sitrep_table
+            value: ${{ workflow.sitrep_data.return }}
+      output_dir: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+      filename_prefix: mt_sitrep_report
+    skipif:
+      conditions:
+        - never
+
+  # Dashboard
+  - name: Create Dashboard
+    id: dashboard
+    task: gather_dashboard
+    partial:
+      details: ${{ workflow.workflow_details.return }}
+      widgets:
+        - ${{ workflow.map_widget.return }}
+        - ${{ workflow.table_widget.return }}
+      time_range: ${{ workflow.time_range.return }}

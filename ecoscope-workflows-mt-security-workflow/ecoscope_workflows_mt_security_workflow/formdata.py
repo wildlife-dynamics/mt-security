@@ -192,11 +192,7 @@ class BaseMapDefs(BaseModel):
             {
                 "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
                 "opacity": 1,
-            },
-            {
-                "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                "opacity": 0.5,
-            },
+            }
         ],
         description="Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
         title=" ",
@@ -205,15 +201,6 @@ class BaseMapDefs(BaseModel):
 
 class GenerateMap(BaseModel):
     base_map_defs: BaseMapDefs | None = Field(None, title="Base Maps")
-
-
-class BaseMapDefs1(BaseModel):
-    base_maps: Any | None = [
-        {
-            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-            "opacity": 1,
-        }
-    ]
 
 
 class Filetype(Enum):
@@ -363,5 +350,4 @@ class FormData(BaseModel):
         description="Render SITREP table as dashboard widget.",
     )
     sitrep_report: SitrepReport | None = Field(None, title="Create SITREP Report")
-    base_map_defs: BaseMapDefs1 | None = None
     persist_sitrep_csv: PersistSitrepCsv | None = None

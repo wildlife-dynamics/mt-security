@@ -24,7 +24,7 @@ rjsf-overrides:
       min_y: -3.0
       max_x: 36.0
       max_y: 0.0
-    base_map_defs.properties.base_maps.default:
+    Generate Map.properties.base_map_defs.properties.base_maps.default:
       - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
         opacity: 1
     persist_sitrep_csv.properties.filetypes.default: ["csv"]
@@ -32,6 +32,15 @@ rjsf-overrides:
     sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
 
   uiSchema:
+    ui:order:
+      - workflow_details
+      - time_range
+      - get_event_data
+      - Process Events
+      - Generate Map
+      - SITREP Table Display
+      - persist_sitrep_csv
+      - sitrep_report
     Process Events.filter_events.filter_point_coords.items.ui:options.label: false
 
 task-instance-defaults:

@@ -12,8 +12,11 @@ integration:
         tzCode: "Africa/Nairobi"
         name: "(UTC+03:00) Nairobi"
         utc: "+03:00"
+    er_client_name:
+      data_source:
+        name: "mmnr"
     get_event_data:
-      file_path: "/Users/yunwu/.ecoscope-desktop/workflows/mt_illegal_event_download/outputs/mt_illegal_event.parquet"
+      event_types: ["arrest_rep", "snare_rep", "poacher_camp_rep"]
     filter_events:
       bounding_box:
         min_x: 33.0

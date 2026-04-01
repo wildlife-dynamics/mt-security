@@ -53,27 +53,43 @@
       "description": "Choose the period of time to analyze.",
       "title": "Time Range"
     },
-    "get_event_data": {
+    "er_client_name": {
       "additionalProperties": false,
       "properties": {
-        "file_path": {
-          "title": "File Path",
-          "type": "string",
-          "description": "Path to the file to load. Supported formats: .parquet, .geoparquet, .geojson, .json, .gpkg, .csv, .shp"
-        },
-        "layer": {
-          "default": null,
-          "title": "Layer",
-          "type": "string",
-          "description": "Layer name for GeoPackage files (optional, only used for .gpkg files)",
-          "ecoscope:advanced": true
+        "data_source": {
+          "$ref": "#/$defs/EarthRangerConnection",
+          "title": "",
+          "description": "Select one of your configured data sources."
         }
       },
       "required": [
-        "file_path"
+        "data_source"
       ],
       "type": "object",
-      "title": "Load Events"
+      "title": "Data Source"
+    },
+    "get_event_data": {
+      "additionalProperties": false,
+      "properties": {
+        "event_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Event Types",
+          "type": "array",
+          "description": "Illegal event types to include in the security report.",
+          "default": [
+            "arrest_rep",
+            "snare_rep",
+            "poacher_camp_rep"
+          ]
+        }
+      },
+      "required": [
+        "event_types"
+      ],
+      "type": "object",
+      "title": "Get Illegal Events"
     },
     "Process Events": {
       "type": "object",
@@ -362,6 +378,19 @@
       "title": "TimezoneInfo",
       "type": "object"
     },
+    "EarthRangerConnection": {
+      "properties": {
+        "name": {
+          "title": "Data Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "EarthRangerConnection",
+      "type": "object"
+    },
     "BoundingBox": {
       "properties": {
         "min_y": {
@@ -407,15 +436,10 @@
         "timezone"
       ]
     },
-    "get_event_data": {
-      "ui:order": [
-        "file_path",
-        "layer"
-      ]
-    },
     "ui:order": [
       "workflow_details",
       "time_range",
+      "er_client_name",
       "get_event_data",
       "Process Events",
       "Generate Map",

@@ -1,32 +1,32 @@
 phase: new
-status: pending
+status: in-progress
 lastUpdated: '2026-04-01'
 notes: ''
 
 setup:
   - name: Scaffold repo
-    status: pending
+    status: completed
   - name: Populate files from PRD
-    status: pending
+    status: completed
 
 tasks:
   - name: Event fetching and processing pipeline
-    status: pending
+    status: in-progress
     type: implement
   - name: SITREP table generation
-    status: pending
+    status: in-progress
     type: implement
   - name: Point map output
-    status: pending
+    status: in-progress
     type: implement
   - name: Table widget output
-    status: pending
+    status: in-progress
     type: implement
   - name: CSV data export
-    status: pending
+    status: in-progress
     type: implement
   - name: DOCX report generation
-    status: pending
+    status: in-progress
     type: implement
   - name: Configure rjsf
     status: pending

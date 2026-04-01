@@ -23,13 +23,5 @@ integration:
         min_y: -3.0
         max_x: 36.0
         max_y: 0.0
-    set_map_title:
-      var: "Illegal Events Map"
-    set_table_title:
-      var: "SITREP Summary"
-    persist_sitrep_csv:
-      filename_prefix: "sitrep"
-      filetypes: ["csv"]
     sitrep_report:
       template_path: "resources/templates/mt_sitrep_report_template.docx"
-      filename_prefix: "mt_sitrep_report"

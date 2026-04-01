@@ -11,22 +11,22 @@ setup:
 
 tasks:
   - name: Event fetching and processing pipeline
-    status: in-progress
+    status: completed
     type: implement
   - name: SITREP table generation
-    status: in-progress
+    status: completed
     type: implement
   - name: Point map output
-    status: in-progress
+    status: completed
     type: implement
   - name: Table widget output
-    status: in-progress
+    status: completed
     type: implement
   - name: CSV data export
-    status: in-progress
+    status: completed
     type: implement
   - name: DOCX report generation
-    status: in-progress
+    status: completed
     type: implement
   - name: Configure rjsf
     status: pending

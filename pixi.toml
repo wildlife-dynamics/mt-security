@@ -1,5 +1,5 @@
 [project]
-name = "mt-sitrep"
+name = "mt-security"
 channels = [
     'https://repo.prefix.dev/ecoscope-workflows/',
     'https://repo.prefix.dev/ecoscope-workflows-custom/',

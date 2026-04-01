@@ -3,7 +3,7 @@ integration:
   mock_io: false
   params:
     workflow_details:
-      name: "MT SITREP"
+      name: "MT SECURITY"
     time_range:
       since: "2026-01-01T00:00:00Z"
       until: "2026-01-31T23:59:59Z"
@@ -12,11 +12,8 @@ integration:
         tzCode: "Africa/Nairobi"
         name: "(UTC+03:00) Nairobi"
         utc: "+03:00"
-    er_client_name:
-      data_source:
-        name: "mmnr"
     get_event_data:
-      event_types: ["arrest_rep", "snare_rep", "poacher_camp_rep"]
+      file_path: "/Users/yunwu/.ecoscope-desktop/workflows/mt_illegal_event_download/outputs/mt_illegal_event.parquet"
     filter_events:
       bounding_box:
         min_x: 33.0
@@ -24,4 +21,4 @@ integration:
         max_x: 36.0
         max_y: 0.0
     sitrep_report:
-      template_path: "resources/templates/mt_sitrep_report_template.docx"
+      template_path: "/Users/yunwu/MEP/wt/mt-security/resources/templates/mt_security_report_template.docx"

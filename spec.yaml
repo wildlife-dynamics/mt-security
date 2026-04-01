@@ -1,4 +1,4 @@
-id: mt_sitrep
+id: mt_security
 
 requirements:
   - name: ecoscope-workflows-core
@@ -29,7 +29,7 @@ rjsf-overrides:
         opacity: 1
     persist_sitrep_csv.properties.filetypes.default: ["csv"]
     persist_sitrep_csv.properties.filetypes.items.enum: ["csv"]
-    sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-sitrep/main/resources/templates/mt_sitrep_report_template.docx"
+    sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
 
   uiSchema:
     Process Events.filter_events.filter_point_coords.items.ui:options.label: false
@@ -58,24 +58,12 @@ workflow:
     partial:
       time_range: ${{ workflow.time_range.return }}
 
-  - name: Data Source
-    id: er_client_name
-    task: set_er_connection
-
-  # Data Fetching
-  - name: Get Illegal Events
+  # Phase 2: Load from local file (replace with set_er_connection + get_events in Phase 3)
+  - name: Load Events
     id: get_event_data
-    task: get_events
+    task: load_df
     partial:
-      client: ${{ workflow.er_client_name.return }}
-      time_range: ${{ workflow.time_range.return }}
-      event_columns: null
-      raise_on_empty: false
-      include_details: true
-      include_updates: false
-      include_related_events: false
-      include_display_values: true
-      include_null_geometry: true
+      deserialize_json: false
 
   # Processing
   - title: Process Events
@@ -103,20 +91,11 @@ workflow:
             - {x: 0.0, y: 0.0}
             - {x: 1.0, y: 1.0}
 
-      - name: Process Event Details
-        id: process_details
-        task: process_events_details
-        partial:
-          df: ${{ workflow.filter_events.return }}
-          client: ${{ workflow.er_client_name.return }}
-          map_to_titles: true
-          ordered: true
-
       - name: Normalize Event Details
         id: normalize_event_details
         task: normalize_json_column
         partial:
-          df: ${{ workflow.process_details.return }}
+          df: ${{ workflow.filter_events.return }}
           column: "event_details"
           skip_if_not_exists: true
           sort_columns: false
@@ -293,10 +272,10 @@ workflow:
               max_concurrent_pages: 2
               device_scale_factor: 1.0
           - item_type: table
-            key: sitrep_table
+            key: summary
             value: ${{ workflow.sitrep_data.return }}
       output_dir: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
-      filename_prefix: mt_sitrep_report
+      filename_prefix: mt_security_report
     skipif:
       conditions:
         - never

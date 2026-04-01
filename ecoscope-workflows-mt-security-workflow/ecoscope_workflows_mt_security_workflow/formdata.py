@@ -199,15 +199,6 @@ class GenerateMap(BaseModel):
     base_map_defs: BaseMapDefs | None = Field(None, title="Base Maps")
 
 
-class Filetype(Enum):
-    csv = "csv"
-    parquet = "parquet"
-
-
-class PersistSitrepCsv(BaseModel):
-    filetypes: list[Filetype] | None = ["csv"]
-
-
 class TimezoneInfo(BaseModel):
     label: str = Field(..., title="Label")
     tzCode: str = Field(..., title="Tzcode")
@@ -220,13 +211,6 @@ class BoundingBox(BaseModel):
     max_y: float | None = Field(90.0, title="Max Latitude")
     min_x: float | None = Field(-180.0, title="Min Longitude")
     max_x: float | None = Field(180.0, title="Max Longitude")
-
-
-class TableConfig(BaseModel):
-    enable_sorting: bool | None = Field(True, title="Enable Sorting")
-    enable_filtering: bool | None = Field(False, title="Enable Filtering")
-    enable_download: bool | None = Field(False, title="Enable Download")
-    hide_header: bool | None = Field(False, title="Hide Header")
 
 
 class AllGrouper(BaseModel):
@@ -282,24 +266,6 @@ class ProcessEvents(BaseModel):
     filter_events: FilterEvents | None = Field(None, title="Filter Event Coordinates")
 
 
-class SitrepHtmlTable(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    columns: list[str] | None = Field(
-        None,
-        description="The list of dataframe columns to render in the table. Leave empty to render all columns",
-        title="Columns",
-    )
-    table_config: TableConfig | None = Field(
-        None, description="Configuration options for the table.", title="Table Config"
-    )
-
-
-class SITREPTableDisplay(BaseModel):
-    sitrep_html_table: SitrepHtmlTable | None = Field(None, title="Draw SITREP Table")
-
-
 class SitrepReport(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -341,10 +307,4 @@ class FormData(BaseModel):
         alias="Generate Map",
         description="Generate point map of illegal events colored by event type.",
     )
-    SITREP_Table_Display: SITREPTableDisplay | None = Field(
-        None,
-        alias="SITREP Table Display",
-        description="Render SITREP table as dashboard widget.",
-    )
     sitrep_report: SitrepReport | None = Field(None, title="Create SITREP Report")
-    persist_sitrep_csv: PersistSitrepCsv | None = None

@@ -664,10 +664,7 @@ set_table_title = (
 # %%
 # parameters
 
-sitrep_html_table_params = dict(
-    columns=...,
-    table_config=...,
-)
+sitrep_html_table_params = dict()
 
 # %%
 # call the task
@@ -685,7 +682,19 @@ sitrep_html_table = (
         unpack_depth=1,
     )
     .partial(
-        dataframe=sitrep_data, widget_id=set_table_title, **sitrep_html_table_params
+        dataframe=sitrep_data,
+        columns=[
+            "Date",
+            "Type",
+            "Comments",
+            "Number of People",
+            "Place of Origin",
+            "Sex",
+            "Details",
+        ],
+        table_config={"enable_sorting": True},
+        widget_id=set_table_title,
+        **sitrep_html_table_params,
     )
     .call()
 )

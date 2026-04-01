@@ -25,20 +25,9 @@ rjsf-overrides:
     Generate Map.properties.base_map_defs.properties.base_maps.default:
       - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
         opacity: 1
-    persist_sitrep_csv.properties.filetypes.default: ["csv"]
-    persist_sitrep_csv.properties.filetypes.items.enum: ["csv", "parquet"]
     sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
 
   uiSchema:
-    ui:order:
-      - workflow_details
-      - time_range
-      - get_event_data
-      - Process Events
-      - Generate Map
-      - SITREP Table Display
-      - persist_sitrep_csv
-      - sitrep_report
     Process Events.filter_events.filter_point_coords.items.ui:options.label: false
 
 task-instance-defaults:
@@ -226,6 +215,9 @@ workflow:
         task: draw_table
         partial:
           dataframe: ${{ workflow.sitrep_data.return }}
+          columns: ["Date", "Type", "Comments", "Number of People", "Place of Origin", "Sex", "Details"]
+          table_config:
+            enable_sorting: true
           widget_id: ${{ workflow.set_table_title.return }}
 
       - name: Persist Table HTML
@@ -253,8 +245,9 @@ workflow:
     partial:
       df: ${{ workflow.sitrep_data.return }}
       root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
-      filename_prefix: "sitrep"
-      filetypes: ["csv"]
+      filename_prefix: sitrep
+      filetypes:
+        - csv
       sanitize: false
     skipif:
       conditions:

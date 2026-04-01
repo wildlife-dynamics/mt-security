@@ -213,13 +213,6 @@ class BoundingBox(BaseModel):
     max_x: float | None = Field(180.0, title="Max Longitude")
 
 
-class TableConfig(BaseModel):
-    enable_sorting: bool | None = Field(True, title="Enable Sorting")
-    enable_filtering: bool | None = Field(False, title="Enable Filtering")
-    enable_download: bool | None = Field(False, title="Enable Download")
-    hide_header: bool | None = Field(False, title="Hide Header")
-
-
 class AllGrouper(BaseModel):
     index_name: str | None = Field("All", title="Index Name")
 
@@ -269,20 +262,6 @@ class FilterEvents(BaseModel):
     )
 
 
-class SitrepHtmlTable(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    columns: list[str] | None = Field(
-        None,
-        description="The list of dataframe columns to render in the table. Leave empty to render all columns",
-        title="Columns",
-    )
-    table_config: TableConfig | None = Field(
-        None, description="Configuration options for the table.", title="Table Config"
-    )
-
-
 class SitrepReport(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -316,5 +295,4 @@ class Params(BaseModel):
     get_event_data: GetEventData | None = Field(None, title="Load Events")
     filter_events: FilterEvents | None = Field(None, title="Filter Event Coordinates")
     base_map_defs: BaseMapDefs | None = Field(None, title="Base Maps")
-    sitrep_html_table: SitrepHtmlTable | None = Field(None, title="Draw SITREP Table")
     sitrep_report: SitrepReport | None = Field(None, title="Create SITREP Report")

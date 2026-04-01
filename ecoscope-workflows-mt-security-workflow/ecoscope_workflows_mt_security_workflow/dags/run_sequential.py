@@ -440,6 +440,16 @@ def main(params: Params):
         )
         .partial(
             dataframe=sitrep_data,
+            columns=[
+                "Date",
+                "Type",
+                "Comments",
+                "Number of People",
+                "Place of Origin",
+                "Sex",
+                "Details",
+            ],
+            table_config={"enable_sorting": True},
             widget_id=set_table_title,
             **(params_dict.get("sitrep_html_table") or {}),
         )

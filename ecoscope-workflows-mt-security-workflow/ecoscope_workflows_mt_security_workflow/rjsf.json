@@ -316,42 +316,6 @@
         }
       }
     },
-    "SITREP Table Display": {
-      "type": "object",
-      "description": "Render SITREP table as dashboard widget.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "sitrep_html_table": {
-          "additionalProperties": false,
-          "properties": {
-            "columns": {
-              "default": null,
-              "items": {
-                "type": "string"
-              },
-              "title": "Columns",
-              "type": "array",
-              "description": "The list of dataframe columns to render in the table. Leave empty to render all columns",
-              "ecoscope:advanced": true
-            },
-            "table_config": {
-              "allOf": [
-                {
-                  "$ref": "#/$defs/TableConfig"
-                }
-              ],
-              "default": null,
-              "title": "Table Config",
-              "description": "Configuration options for the table.",
-              "ecoscope:advanced": true
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Draw SITREP Table"
-        }
-      }
-    },
     "sitrep_report": {
       "additionalProperties": false,
       "properties": {
@@ -394,21 +358,6 @@
       ],
       "type": "object",
       "title": "Create SITREP Report"
-    },
-    "persist_sitrep_csv": {
-      "properties": {
-        "filetypes": {
-          "default": [
-            "csv"
-          ],
-          "items": {
-            "enum": [
-              "csv",
-              "parquet"
-            ]
-          }
-        }
-      }
     }
   },
   "$defs": {
@@ -468,32 +417,6 @@
         }
       },
       "title": "BoundingBox",
-      "type": "object"
-    },
-    "TableConfig": {
-      "properties": {
-        "enable_sorting": {
-          "default": true,
-          "title": "Enable Sorting",
-          "type": "boolean"
-        },
-        "enable_filtering": {
-          "default": false,
-          "title": "Enable Filtering",
-          "type": "boolean"
-        },
-        "enable_download": {
-          "default": false,
-          "title": "Enable Download",
-          "type": "boolean"
-        },
-        "hide_header": {
-          "default": false,
-          "title": "Hide Header",
-          "type": "boolean"
-        }
-      },
-      "title": "TableConfig",
       "type": "object"
     },
     "AllGrouper": {
@@ -603,14 +526,6 @@
         "layer"
       ]
     },
-    "SITREP Table Display": {
-      "sitrep_html_table": {
-        "ui:order": [
-          "columns",
-          "table_config"
-        ]
-      }
-    },
     "sitrep_report": {
       "ui:order": [
         "template_path",
@@ -623,8 +538,6 @@
       "get_event_data",
       "Process Events",
       "Generate Map",
-      "SITREP Table Display",
-      "persist_sitrep_csv",
       "sitrep_report"
     ],
     "Process Events": {

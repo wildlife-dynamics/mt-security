@@ -75,7 +75,7 @@ workflow:
       include_updates: false
       include_related_events: false
       include_display_values: true
-      include_null_geometry: true
+      include_null_geometry: false
 
   # Processing
   - title: Process Events
@@ -203,7 +203,7 @@ workflow:
         partial:
           text: ${{ workflow.event_ecomap.return }}
           root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
-          filename_suffix: "illegal_events_map"
+          filename_suffix: "security_report_map"
 
       - name: Create Map Widget
         id: map_widget
@@ -216,9 +216,9 @@ workflow:
           data: ${{ workflow.ecomap_html_url.return }}
 
   # Table Widget
-  - title: SITREP Table Display
+  - title: Security Reports Table
     type: task-group
-    description: "Render SITREP table as dashboard widget."
+    description: "Render security reports as a dashboard table widget."
     tasks:
       - name: Set Table Title
         id: set_table_title

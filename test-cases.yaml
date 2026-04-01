@@ -28,4 +28,4 @@ integration:
         - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
           opacity: 1
     sitrep_report:
-      template_path: "/Users/yunwu/MEP/wt/mt-security/resources/templates/mt_security_report_template.docx"
+      template_path: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"

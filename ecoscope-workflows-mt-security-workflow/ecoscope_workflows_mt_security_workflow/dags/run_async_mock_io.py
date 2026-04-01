@@ -362,7 +362,7 @@ def main(params: Params):
             )
             .set_executor("lithops"),
             partial={
-                "var": "Illegal Events Map",
+                "var": "Security Report Locations",
             }
             | (params_dict.get("set_map_title") or {}),
             method="call",
@@ -526,7 +526,7 @@ def main(params: Params):
             )
             .set_executor("lithops"),
             partial={
-                "var": "SITREP Summary",
+                "var": "Security Reports",
             }
             | (params_dict.get("set_table_title") or {}),
             method="call",

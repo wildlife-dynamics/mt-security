@@ -452,7 +452,7 @@ set_map_title = (
         ],
         unpack_depth=1,
     )
-    .partial(var="Illegal Events Map", **set_map_title_params)
+    .partial(var="Security Report Locations", **set_map_title_params)
     .call()
 )
 
@@ -694,7 +694,7 @@ set_table_title = (
         ],
         unpack_depth=1,
     )
-    .partial(var="SITREP Summary", **set_table_title_params)
+    .partial(var="Security Reports", **set_table_title_params)
     .call()
 )
 

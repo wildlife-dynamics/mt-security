@@ -312,7 +312,9 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(var="Illegal Events Map", **(params_dict.get("set_map_title") or {}))
+        .partial(
+            var="Security Report Locations", **(params_dict.get("set_map_title") or {})
+        )
         .call()
     )
 
@@ -466,7 +468,7 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(var="SITREP Summary", **(params_dict.get("set_table_title") or {}))
+        .partial(var="Security Reports", **(params_dict.get("set_table_title") or {}))
         .call()
     )
 

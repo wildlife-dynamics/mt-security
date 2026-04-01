@@ -144,7 +144,7 @@ workflow:
         id: set_map_title
         task: set_string_var
         partial:
-          var: "Illegal Events Map"
+          var: "Security Report Locations"
 
       - name: Base Maps
         id: base_map_defs
@@ -224,7 +224,7 @@ workflow:
         id: set_table_title
         task: set_string_var
         partial:
-          var: "SITREP Summary"
+          var: "Security Reports"
 
       - name: Draw SITREP Table
         id: sitrep_html_table

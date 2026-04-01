@@ -609,6 +609,7 @@ def main(params: Params):
             )
             .set_executor("lithops"),
             partial={
+                "groupers": None,
                 "context": {
                     "items": [
                         {

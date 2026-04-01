@@ -530,6 +530,7 @@ def main(params: Params):
             unpack_depth=1,
         )
         .partial(
+            groupers=None,
             context={
                 "items": [
                     {

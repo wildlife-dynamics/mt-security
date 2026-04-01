@@ -324,40 +324,13 @@
           "type": "string",
           "description": "Path or URL to the Word template (.docx) file with Jinja2 placeholders. Supports local paths and remote URLs (http://, https://).",
           "default": "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
-        },
-        "groupers": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/AllGrouper"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/$defs/ValueGrouper"
-                  },
-                  {
-                    "$ref": "#/$defs/TemporalGrouper"
-                  },
-                  {
-                    "$ref": "#/$defs/SpatialGrouper"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "default": null,
-          "title": "Groupers",
-          "description": "            Optional groupers for sorting grouped items. When provided, grouped items\n            are sorted using the grouper's sort_key (e.g., months in calendar order).\n            If not provided, items are sorted alphabetically by filter string.\n            ",
-          "ecoscope:advanced": true
         }
       },
       "required": [
         "template_path"
       ],
       "type": "object",
-      "title": "Create SITREP Report"
+      "title": "Create Security Report"
     }
   },
   "$defs": {
@@ -418,92 +391,6 @@
       },
       "title": "BoundingBox",
       "type": "object"
-    },
-    "AllGrouper": {
-      "properties": {
-        "index_name": {
-          "default": "All",
-          "ecoscope:advanced": true,
-          "title": "Index Name",
-          "type": "string"
-        }
-      },
-      "title": "AllGrouper",
-      "type": "object"
-    },
-    "SpatialGrouper": {
-      "properties": {
-        "spatial_index_name": {
-          "title": "Spatial Regions",
-          "type": "string"
-        }
-      },
-      "required": [
-        "spatial_index_name"
-      ],
-      "title": "Spatial",
-      "type": "object"
-    },
-    "TemporalGrouper": {
-      "properties": {
-        "temporal_index": {
-          "oneOf": [
-            {
-              "const": "%Y",
-              "title": "Year (example: 2024)"
-            },
-            {
-              "const": "%B",
-              "title": "Month (example: September)"
-            },
-            {
-              "const": "%Y-%m",
-              "title": "Year and Month (example: 2023-01)"
-            },
-            {
-              "const": "%j",
-              "title": "Day of the year as a number (example: 365)"
-            },
-            {
-              "const": "%d",
-              "title": "Day of the month as a number (example: 31)"
-            },
-            {
-              "const": "%A",
-              "title": "Day of the week (example: Sunday)"
-            },
-            {
-              "const": "%H",
-              "title": "Hour (24-hour clock) as number (example: 22)"
-            },
-            {
-              "const": "%Y-%m-%d",
-              "title": "Date (example: 2025-01-31)"
-            }
-          ],
-          "title": "Time",
-          "type": "string"
-        }
-      },
-      "required": [
-        "temporal_index"
-      ],
-      "title": "Time",
-      "type": "object"
-    },
-    "ValueGrouper": {
-      "properties": {
-        "index_name": {
-          "oneOf": [],
-          "title": "Category",
-          "type": "string"
-        }
-      },
-      "required": [
-        "index_name"
-      ],
-      "title": "Category",
-      "type": "object"
     }
   },
   "uiSchema": {
@@ -524,12 +411,6 @@
       "ui:order": [
         "file_path",
         "layer"
-      ]
-    },
-    "sitrep_report": {
-      "ui:order": [
-        "template_path",
-        "groupers"
       ]
     },
     "ui:order": [

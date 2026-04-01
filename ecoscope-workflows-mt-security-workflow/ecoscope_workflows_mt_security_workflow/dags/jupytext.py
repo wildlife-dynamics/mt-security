@@ -801,14 +801,13 @@ persist_sitrep_csv = (
 
 
 # %% [markdown]
-# ## Create SITREP Report
+# ## Create Security Report
 
 # %%
 # parameters
 
 sitrep_report_params = dict(
     template_path=...,
-    groupers=...,
 )
 
 # %%
@@ -826,6 +825,7 @@ sitrep_report = (
         unpack_depth=1,
     )
     .partial(
+        groupers=None,
         context={
             "items": [
                 {

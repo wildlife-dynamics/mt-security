@@ -199,6 +199,17 @@ class GenerateMap(BaseModel):
     base_map_defs: BaseMapDefs | None = Field(None, title="Base Maps")
 
 
+class SitrepReport(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    template_path: str = Field(
+        ...,
+        description="Path or URL to the Word template (.docx) file with Jinja2 placeholders. Supports local paths and remote URLs (http://, https://).",
+        title="Template Path",
+    )
+
+
 class TimezoneInfo(BaseModel):
     label: str = Field(..., title="Label")
     tzCode: str = Field(..., title="Tzcode")
@@ -211,33 +222,6 @@ class BoundingBox(BaseModel):
     max_y: float | None = Field(90.0, title="Max Latitude")
     min_x: float | None = Field(-180.0, title="Min Longitude")
     max_x: float | None = Field(180.0, title="Max Longitude")
-
-
-class AllGrouper(BaseModel):
-    index_name: str | None = Field("All", title="Index Name")
-
-
-class SpatialGrouper(BaseModel):
-    spatial_index_name: str = Field(..., title="Spatial Regions")
-
-
-class TemporalIndex(str, Enum):
-    Year__example__2024_ = "%Y"
-    Month__example__September_ = "%B"
-    Year_and_Month__example__2023_01_ = "%Y-%m"
-    Day_of_the_year_as_a_number__example__365_ = "%j"
-    Day_of_the_month_as_a_number__example__31_ = "%d"
-    Day_of_the_week__example__Sunday_ = "%A"
-    Hour__24_hour_clock__as_number__example__22_ = "%H"
-    Date__example__2025_01_31_ = "%Y-%m-%d"
-
-
-class TemporalGrouper(BaseModel):
-    temporal_index: TemporalIndex = Field(..., title="Time")
-
-
-class ValueGrouper(BaseModel):
-    index_name: str = Field(..., title="Category")
 
 
 class TimeRange(BaseModel):
@@ -266,24 +250,6 @@ class ProcessEvents(BaseModel):
     filter_events: FilterEvents | None = Field(None, title="Filter Event Coordinates")
 
 
-class SitrepReport(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    template_path: str = Field(
-        ...,
-        description="Path or URL to the Word template (.docx) file with Jinja2 placeholders. Supports local paths and remote URLs (http://, https://).",
-        title="Template Path",
-    )
-    groupers: (
-        AllGrouper | list[ValueGrouper | TemporalGrouper | SpatialGrouper] | None
-    ) = Field(
-        None,
-        description="            Optional groupers for sorting grouped items. When provided, grouped items\n            are sorted using the grouper's sort_key (e.g., months in calendar order).\n            If not provided, items are sorted alphabetically by filter string.\n            ",
-        title="Groupers",
-    )
-
-
 class FormData(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -307,4 +273,4 @@ class FormData(BaseModel):
         alias="Generate Map",
         description="Generate point map of illegal events colored by event type.",
     )
-    sitrep_report: SitrepReport | None = Field(None, title="Create SITREP Report")
+    sitrep_report: SitrepReport | None = Field(None, title="Create Security Report")

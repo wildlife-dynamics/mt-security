@@ -22,10 +22,10 @@ rjsf-overrides:
       min_y: -3.0
       max_x: 36.0
       max_y: 0.0
+    sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
     Generate Map.properties.base_map_defs.properties.base_maps.default:
       - url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
         opacity: 1
-    sitrep_report.properties.template_path.default: "https://raw.githubusercontent.com/wildlife-dynamics/mt-security/main/resources/templates/mt_security_report_template.docx"
 
   uiSchema:
     Process Events.filter_events.filter_point_coords.items.ui:options.label: false
@@ -254,10 +254,11 @@ workflow:
         - never
 
   # Report
-  - name: Create SITREP Report
+  - name: Create Security Report
     id: sitrep_report
     task: ecoscope_workflows_ext_custom.tasks.results.create_docx
     partial:
+      groupers: null
       context:
         items:
           - item_type: timerange
